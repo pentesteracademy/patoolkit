@@ -6,22 +6,42 @@ PA Toolkit (Pentester Academy Wireshark Toolkit)
 
 PA Toolkit is a collection of traffic analysis plugins to extend the functionality of Wireshark from a micro-analysis tool and protocol dissector to the macro analyzer and threat hunter. PA Toolkit contains plugins (both dissectors and taps) covering various scenarios for multiple protocols, including:
 
-- WiFi (WiFi network summary, Detecting beacon, deauth floods, Evil twin etc.)
-- VoIP ( Overview of extensions, servers, Detecting invite flood, message flood, SIP auth bruteforcing, Decrypting encrypted VoIP conversation)
-- HTTP (Listing all visited websites, downloaded files, streaming files, Detecting HTTP Tunnels)
-- HTTPS (Listing all websites opened on HTTPS, Detecting self-signed certificates)
+- WiFi (WiFi network summary, Detecting beacon, deauth floods etc.)
+- HTTP (Listing all visited websites, downloaded files)
+- HTTPS (Listing all websites opened on HTTPS)
 - ARP (MAC-IP table, Detect MAC spoofing and ARP poisoning)
 - DNS (Listing DNS servers used and DNS resolution, Detecting DNS Tunnels)
+
+The project is under active development and more plugins will be added in near future.
+
+This material was created while working on "Traffic Analysis: TSHARK Unleashed" course. Those interested can check the course here: https://www.pentesteracademy.com/course?id=42
+
+#############
+Terms of Use
+#############
+
+- This code must only be used for non-commercial purpose.
+- This repository must be mentioned as a reference.  
 
 ############
 Installation
 ############
 
-Clone this repository to wireshark plugins directory and start wireshark. :) 
+Steps:
+
+1. Copy the "plugins" directory to Wireshark plugins directory. 
+2. Start wireshark. :) 
 
 One can get the location of wireshark plugins directory by checking `Help > About Wireshark > Folders`
 
 .. image:: https://user-images.githubusercontent.com/743886/43845711-72426d36-9ae1-11e8-9945-0bbe8e078e2a.png
+
+################
+Tool featured at
+################
+
+- Blackhat Arsenal 2018 <https://www.blackhat.com/us-18/arsenal/schedule/index.html#pa-toolkit-wireshark-plugins-for-pentesters-12035>
+- DEF CON 26 Demolabs <https://defcon.org/html/defcon-26/dc-26-demolabs.html>
 
 #######
 Author
@@ -36,13 +56,23 @@ Under the guidance of Mr. Vivek Ramachandran, CEO, Pentester Academy
 Documentation
 ##############
 
-For more details refer to the documentation PDF file.
+For more details refer to the "PA-Toolkit.pdf" PDF file. This file contains the slide deck used for presentations.
 
 ############
 Screenshots
 ############
 
-To be added.
+PA Toolkit after installation
+.. image:: https://user-images.githubusercontent.com/743886/44320933-e4772d80-a3f9-11e8-86c6-82b614221700.png
+
+List of websites visited over HTTP
+.. image:: https://user-images.githubusercontent.com/743886/44320940-e8a34b00-a3f9-11e8-98e9-ab003107d15c.png
+
+Search functionality
+.. image:: https://user-images.githubusercontent.com/743886/44320950-f48f0d00-a3f9-11e8-897a-d84d5e20e2e0.png
+
+Domain to IP mappings
+.. image:: https://user-images.githubusercontent.com/743886/44320953-f8bb2a80-a3f9-11e8-8530-70d36b0a1bff.png
 
 ########
 License
