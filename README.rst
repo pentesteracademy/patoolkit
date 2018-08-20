@@ -63,15 +63,19 @@ Screenshots
 ############
 
 PA Toolkit after installation
+
 .. image:: https://user-images.githubusercontent.com/743886/44320933-e4772d80-a3f9-11e8-86c6-82b614221700.png
 
 List of websites visited over HTTP
+
 .. image:: https://user-images.githubusercontent.com/743886/44320940-e8a34b00-a3f9-11e8-98e9-ab003107d15c.png
 
 Search functionality
+
 .. image:: https://user-images.githubusercontent.com/743886/44320950-f48f0d00-a3f9-11e8-897a-d84d5e20e2e0.png
 
 Domain to IP mappings
+
 .. image:: https://user-images.githubusercontent.com/743886/44320953-f8bb2a80-a3f9-11e8-8530-70d36b0a1bff.png
 
 ########
