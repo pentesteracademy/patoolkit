@@ -20,8 +20,7 @@ This material was created while working on "Traffic Analysis: TSHARK Unleashed" 
 Terms of Use
 #############
 
-- This code must only be used for non-commercial purpose.
-- This repository must be mentioned as a reference.  
+- This is licensed under GPL just as Wireshark.
 
 ############
 Installation
