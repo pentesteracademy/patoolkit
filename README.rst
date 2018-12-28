@@ -35,6 +35,10 @@ One can get the location of wireshark plugins directory by checking `Help > Abou
 
 .. image:: https://user-images.githubusercontent.com/743886/43845711-72426d36-9ae1-11e8-9945-0bbe8e078e2a.png
 
+Please opt for **Personal Plugins** directory instead of **Global Plugins** directory. Also, please don't paste the plugins directory in both directories otherwise you might see repeated entries for each plugin.
+
+**Special note for Macbook users:** Paste the plugins in **Personal Lua plugins** and not in **Personal Plugins**.
+
 ################
 Tool featured at
 ################
