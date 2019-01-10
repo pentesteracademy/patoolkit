@@ -22,22 +22,14 @@ do
         local container={}
         local container_store={}
         
-        function getFrame()
+        function cwbp_getFrame()
             return tostring(frame_number())
         end
-        function getType()
-            if(sub_type()~=nil)
-                then
-                return tostring(sub_type())
-            else
-                return false
-            end
-        end
 
-        function getKey()
+        function cwbp_getKey()
             return tostring(key())
         end
-        function getReplay()
+        function cwbp_getReplay()
             return tostring(replay())
         end
 
@@ -64,13 +56,13 @@ local function init_listener()
         local da=""
         local sa=""
         -- get the key and initialize the key_name variable.
-        if(getKey()=="0x0000008a")
+        if(cwbp_getKey()=="0x0000008a")
             then
             key_name="first"
-        elseif(getKey()=="0x0000010a")
+        elseif(cwbp_getKey()=="0x0000010a")
             then
             key_name="second"
-        elseif(getKey()=="0x000013ca")
+        elseif(cwbp_getKey()=="0x000013ca")
             then
             key_name="third"
         else
@@ -115,8 +107,8 @@ local function init_listener()
             -- there might be multiple key, thats why a store is being maintained. 
             data=container[sa..da]
             data[key_name.."Count"]=data[key_name.."Count"]+1
-            table.insert(data[key_name.."Frames"],getFrame())
-            table.insert(data[key_name.."Replay"],getReplay())
+            table.insert(data[key_name.."Frames"],cwbp_getFrame())
+            table.insert(data[key_name.."Replay"],cwbp_getReplay())
 
 
     end
@@ -210,7 +202,7 @@ end
                        then
                             count=count+1
 
-                          local acf_settings={
+                          local cwbp_acf_settings={
                           { 
                             ["value"]=count,           
                             ["length"]=10,  
@@ -241,7 +233,7 @@ end
                           }                                  
                         }
                           win:append("|---------------------------------------------------------------------------------------------|\n")        
-                          win:append(acf(acf_settings,"|"))  
+                          win:append(cwbp_acf(cwbp_acf_settings,"|"))  
                     end
                 end
           end
@@ -261,26 +253,26 @@ end
 
 end
 
-        function acf(settings,column_seperator)
+        function cwbp_acf(settings,column_seperator)
           local final=""
-          while(isNext(settings))do
+          while(cwbp_isNext(settings))do
               for k,v in ipairs(settings)do
                   if(v["next"]==false) then v["value"]="" else v["next"]=false end
-                  final=final..column_seperator..format_str(v)
+                  final=final..column_seperator..cwbp_format_str(v)
                   if(k==#settings) then final=final..column_seperator.."\n" end
               end
            end
           return final
         end
 
-        function isNext(settings)
+        function cwbp_isNext(settings)
           for k,v in ipairs(settings)do 
             if(v["next"]) then return true end
           end
           return false
         end
 
-        function format_str(global,substr)
+        function cwbp_format_str(global,substr)
             local m=0
             local n=0
             local str=""
@@ -319,7 +311,7 @@ end
                 if(delimiter=="" or a==nil or a>len) then a=len else c=1 end
                 global["value"]=str:sub(a+c)
                 global["next"]=true
-                return format_str(global,str:sub(1,a-1))
+                return cwbp_format_str(global,str:sub(1,a-1))
             end
             return s
         end

@@ -24,7 +24,7 @@ do
     
     local ssids={}
     local ssids_store={}
-    function getString(str)
+    function wo_getString(str)
         if(str()~=nil) then return tostring(str()) else return "" end
     end
 
@@ -45,8 +45,8 @@ do
     -- Called once each time the filter of the tap matches
     function tap.packet(pinfo, tvb)
 
-        local bssid=getString(Bssid)
-        local type=getString(fc_type)
+        local bssid=wo_getString(Bssid)
+        local type=wo_getString(fc_type)
         
         -- check whether bssid exists and is not equal to brodcast
         if(bssid~="" and bssid~="ff:ff:ff:ff:ff:ff")
@@ -66,7 +66,7 @@ do
 
 
             -- for % packet, check
-            if(getString(wlan_addr)==bssid)
+            if(wo_getString(wlan_addr)==bssid)
                 then
 
                 -- for % packets, when bssid==wlan.addr
@@ -79,7 +79,7 @@ do
                 ssids[bssid]["mgmtCount"]=ssids[bssid]["mgmtCount"]+1
 
                 -- if becaon frame is found update rest of the information
-                if(getString(sub_type)=="8")
+                if(wo_getString(sub_type)=="8")
                     then
 
                     if(ssids[bssid]["ssid"]==nil)
@@ -87,8 +87,8 @@ do
 
                         -- get encryption, key mangment and wps state from here
                         local gc,pc,keyM,enc,wpa_st,frame_pr=security.getEncryption()
-                        ssids[bssid]["ssid"]=getString(Ssid)
-                        ssids[bssid]["channel"]=getString(Channel)
+                        ssids[bssid]["ssid"]=wo_getString(Ssid)
+                        ssids[bssid]["channel"]=wo_getString(Channel)
                         ssids[bssid]["enc"]=enc
                         ssids[bssid]["keyM"]=keyM
                         ssids[bssid]["wps"]=wpa_st
@@ -124,7 +124,7 @@ do
                           if(util.searchStr({data["ssid"],k,data["channel"],data["dataCount"],data["mgmtCount"],data["enc"],data["keyM"],data["wps"],string.format("%.2f",(data["addr-bssid-same"]/(data["mgmtCount"]+data["dataCount"]+data["controlCount"]))*100)},stringToFind))
                             then
                                 count=count+1
-                              local acf_settings={
+                              local wo_acf_settings={
                               { 
                                 ["value"]=count,           
                                 ["length"]=10,  
@@ -204,7 +204,7 @@ do
                               }                                   
                             }
                               win:append("|------------------------------------------------------------------------------------------------------------------------------------------------------|\n")        
-                              win:append(acf(acf_settings,"|"))  
+                              win:append(wo_acf(wo_acf_settings,"|"))  
                           end
                         end
                   end
@@ -212,11 +212,11 @@ do
 
         end 
 
-        function menu1()
+        function wo_menu1()
           util.dialog_menu(security_information,"Overview")
         end
 
-        register_menu("WiFi/Overview",menu1, MENU_TOOLS_UNSORTED)
+        register_menu("WiFi/Overview",wo_menu1, MENU_TOOLS_UNSORTED)
 
 
 
@@ -225,12 +225,12 @@ end
 
 ------------------------------------------------------------ Function For String Formatting START----------------------------------
 
-function acf(settings,column_seperator)
+function wo_acf(settings,column_seperator)
   local final=""
-  while(isNext(settings))do
+  while(wo_isNext(settings))do
       for k,v in ipairs(settings)do
           if(v["next"]==false) then v["value"]="" else v["next"]=false end
-          final=final..column_seperator..format_str(v)
+          final=final..column_seperator..wo_format_str(v)
           if(k==#settings) then final=final..column_seperator.."\n" end
       end
    end
@@ -239,25 +239,25 @@ end
 
 
 
-function acf(settings,column_seperator)
+function wo_acf(settings,column_seperator)
   local final=""
-  while(isNext(settings))do
+  while(wo_isNext(settings))do
       for k,v in ipairs(settings)do
           if(v["next"]==false) then v["value"]="" else v["next"]=false end
-          final=final..column_seperator..format_str(v)
+          final=final..column_seperator..wo_format_str(v)
           if(k==#settings) then final=final..column_seperator.."\n" end
       end
    end
   return final
 end
 
-function isNext(settings)
+function wo_isNext(settings)
   for k,v in ipairs(settings)do 
     if(v["next"]) then return true end
   end
   return false
 end
-function format_str(global,substr)
+function wo_format_str(global,substr)
     local m=0
     local n=0
     local str=""
@@ -316,7 +316,7 @@ function format_str(global,substr)
         global["next"]=true
 
       
-        return format_str(global,str:sub(1,a-1))
+        return wo_format_str(global,str:sub(1,a-1))
     end
     return s
 end

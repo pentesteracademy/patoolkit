@@ -24,15 +24,15 @@ do
         local container= {}
         local requests={}
 
-        function getRequest()
+        function df_getRequest()
           if(http_request()==nil) then return false else return true end
         end
 
-        function getFile()
+        function df_getFile()
           if(resp_code()==nil) then return false else return true end
         end
 
-       function check2(str)
+       function df_check2(str)
 
           if str ~= nil
             then return tostring(str)
@@ -59,26 +59,26 @@ local function init_listener()
     function tap.packet(pinfo, tvb)
 
         -- check if its a request, if it is store host, useragent and the path of the request
-        if getRequest()
+        if df_getRequest()
           then
-            local uri=check2(request_uri())
+            local uri=df_check2(request_uri())
             local file={}
-            file["host"]=check2(host())
-            file["user_agent"]=check2(user_agent())
+            file["host"]=df_check2(host())
+            file["user_agent"]=df_check2(user_agent())
             file["path"]=uri
             requests[getFrame()]=file
 
         -- check for response code 200 ok and whether the is a request in field inside the response, save the content
         -- length, content type of the file in the response, map it with the request to which it corresponds and store it in container table
-        elseif (getFile() and request_in() and check2(resp_code())=="200")
+        elseif (df_getFile() and request_in() and df_check2(resp_code())=="200")
           then
-            local req=requests[check2(request_in())]
+            local req=requests[df_check2(request_in())]
             local file={}
             file["host"]=req["host"]
             file["user_agent"]=req["user_agent"]
             file["path"]=req["path"]
-            file["content_type"]=check2(content_type())
-            file["content_length"]=check2(content_length())
+            file["content_type"]=df_check2(content_type())
+            file["content_length"]=df_check2(content_length())
             table.insert(container,file)
         end
     end
@@ -101,7 +101,7 @@ end
                     count=count+1
 
 
-                  local acf_settings={
+                  local df_acf_settings={
                   { 
                     ["value"]=count,           
                     ["length"]=10,  
@@ -147,7 +147,7 @@ end
                 }
                   win:append("|----------------------------------------------------------------------------------------------------------------------------------|\n")  
                   
-                  win:append(acf(acf_settings,"|"))  
+                  win:append(df_acf(df_acf_settings,"|"))  
                 end
           end
           win:append("|__________________________________________________________________________________________________________________________________|\n")     
@@ -155,37 +155,37 @@ end
         end 
 
 
-        function menu1()
+        function df_menu1()
             util.dialog_menu(get_request,"Downloaded Files")
         end
 
-        register_menu("Web/Downloaded Files",menu1, MENU_TOOLS_UNSORTED)
+        register_menu("Web/Downloaded Files",df_menu1, MENU_TOOLS_UNSORTED)
 
 
 
   init_listener()
 
 end
-        function acf(settings,column_seperator)
+        function df_acf(settings,column_seperator)
           local final=""
-          while(isNext(settings))do
+          while(df_isNext(settings))do
               for k,v in ipairs(settings)do
                   if(v["next"]==false) then v["value"]="" else v["next"]=false end
-                  final=final..column_seperator..format_str(v)
+                  final=final..column_seperator..df_format_str(v)
                   if(k==#settings) then final=final..column_seperator.."\n" end
               end
            end
           return final
         end
 
-        function isNext(settings)
+        function df_isNext(settings)
           for k,v in ipairs(settings)do 
             if(v["next"]) then return true end
           end
           return false
         end
 
-        function format_str(global,substr)
+        function df_format_str(global,substr)
             local m=0
             local n=0
             local str=""
@@ -224,7 +224,7 @@ end
                 if(delimiter=="" or a==nil or a>len) then a=len else c=1 end
                 global["value"]=str:sub(a+c)
                 global["next"]=true
-                return format_str(global,str:sub(1,a-1))
+                return df_format_str(global,str:sub(1,a-1))
             end
             return s
         end

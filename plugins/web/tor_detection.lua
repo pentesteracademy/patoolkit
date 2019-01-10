@@ -143,20 +143,20 @@ do
                     count=count+1
 	          win:append("|------------------------------------------------------------------------------------------------------|\n")
 	          
-	          win:append("|"..format_str(global[1],col_serial_len,global,"").."|"..format_str(global1[1],column_1_length,global1,",").."|"..format_str(tostring(tbl["packet"]),column_2_length,global," ").."|"..format_str(tostring(tbl["data"]),column_3_length,global," ").."|"..format_str(tostring(tbl["time"]),column_4_length,global," ").."|\n")
+	          win:append("|"..tor_format_str(global[1],col_serial_len,global,"").."|"..tor_format_str(global1[1],column_1_length,global1,",").."|"..tor_format_str(tostring(tbl["packet"]),column_2_length,global," ").."|"..tor_format_str(tostring(tbl["data"]),column_3_length,global," ").."|"..tor_format_str(tostring(tbl["time"]),column_4_length,global," ").."|\n")
 	          while(global1[2]) do
-	              win:append("|"..format_str("",col_serial_len,global," "))
+	              win:append("|"..tor_format_str("",col_serial_len,global," "))
 	            if(global1[2])
 	              then
 	              global1[2]=false
-	              win:append("|"..format_str(global1[1],column_1_length,global1," "))
+	              win:append("|"..tor_format_str(global1[1],column_1_length,global1," "))
 	            else
-	              win:append("|".. format_str("",column_1_length,global1," "))
+	              win:append("|".. tor_format_str("",column_1_length,global1," "))
 	            end
-	              win:append("|".. format_str("",column_2_length,global2," "))
-	              win:append("|".. format_str("",column_3_length,global,","))
-	              win:append("|".. format_str("",column_4_length,global,","))
-	              win:append("|".. format_str("",column_5_length,global," ").."|\n")
+	              win:append("|".. tor_format_str("",column_2_length,global2," "))
+	              win:append("|".. tor_format_str("",column_3_length,global,","))
+	              win:append("|".. tor_format_str("",column_4_length,global,","))
+	              win:append("|".. tor_format_str("",column_5_length,global," ").."|\n")
 	          end
 	      end
 	  end
@@ -168,16 +168,16 @@ do
 
 	end
 
-	function menu1()
+	function tor_menu1()
 	    util.dialog_menu(dialog_menu,"List of Relays")
 	end
-  register_menu("Web/TOR Detection",menu1, MENU_TOOLS_UNSORTED)
+  register_menu("Web/TOR Detection",tor_menu1, MENU_TOOLS_UNSORTED)
   init_listener()
 
 end
 
 
-	function format_str(str,len,global, delimiter)
+	function tor_format_str(str,len,global, delimiter)
 	    local s=str
 	    -- left space variable
 	    local m=0
@@ -222,7 +222,7 @@ end
 	        global[2]=true
 
 	        -- returning the string with decreased length
-	        return format_str(str:sub(0,a-1),len)
+	        return tor_format_str(str:sub(0,a-1),len)
 	        
 	    end
 	    return s

@@ -28,7 +28,7 @@ do
 
         local container={}
 
-        function getType()
+        function dfd_getType()
             if(sub_type()~=nil)
                 then
                 return tostring(sub_type())
@@ -37,7 +37,7 @@ do
             end
         end
 
-        function getTime()
+        function dfd_getTime()
             return tonumber(tostring(time()))
         end
 
@@ -60,7 +60,7 @@ local function init_listener()
                 local da=tostring(wlan_da())
 
                 -- check whether the packet is disassoc or deauth
-                if(getType()=='12' or getType()=='10')
+                if(dfd_getType()=='12' or dfd_getType()=='10')
                     then
 
                         -- if an entry already exists for the connection, swap addresses
@@ -81,12 +81,12 @@ local function init_listener()
                             data["data"]=false
                             data["deAuthTotal"]=0
                             data["disAssocTotal"]=0
-                            if(getType()=='12')
+                            if(dfd_getType()=='12')
                                 then
                                 data["deAuthCount"]=1
                                 data["disAssocCount"]=0
-                                data["deAuthTimeStart"]=getTime()
-                                data["deAuthTimeStop"]=getTime()
+                                data["deAuthTimeStart"]=dfd_getTime()
+                                data["deAuthTimeStop"]=dfd_getTime()
                                 data["deAuthAvg"]=0
                                 data["deAuthAvgCount"]=0
                                 data["disAssocTimeStart"]=0
@@ -97,8 +97,8 @@ local function init_listener()
                             else
                                 data["deAuthCount"]=0
                                 data["disAssocCount"]=1
-                                data["disAssocTimeStart"]=getTime()
-                                data["disAssocTimeStop"]=getTime()
+                                data["disAssocTimeStart"]=dfd_getTime()
+                                data["disAssocTimeStop"]=dfd_getTime()
                                 data["deAuthAvg"]=0
                                 data["deAuthAvgCount"]=0
                                 data["deAuthTimeStart"]=0
@@ -115,16 +115,16 @@ local function init_listener()
                            local data=container[sa..da]
 
                             -- if the packet is deauth 
-                            if(getType()=='12')
+                            if(dfd_getType()=='12')
                                 then
 
                                 -- if last packet was data, the deauth count is 1
                                 if(data["last"]=="Data")
                                     then
-                                    data["deAuthAvg"]=math.max(data["deAuthAvg"],data["deAuthCount"]/div(data["deAuthTimeStop"],data["deAuthTimeStart"]))
+                                    data["deAuthAvg"]=math.max(data["deAuthAvg"],data["deAuthCount"]/dfd_div(data["deAuthTimeStop"],data["deAuthTimeStart"]))
                                     data["deAuthTotal"]=data["deAuthTotal"]+data["deAuthCount"]
                                     data["deAuthCount"]=1
-                                    data["deAuthTimeStart"]=getTime()
+                                    data["deAuthTimeStart"]=dfd_getTime()
                                 else
                                     -- if the last packet was not data packet increment deauth by 1
                                     data["deAuthCount"]=data["deAuthCount"]+1
@@ -133,9 +133,9 @@ local function init_listener()
                                 -- initialize deauthTime 
                                 if(data["deAuthTimeStart"]==0)
                                     then
-                                    data["deAuthTimeStart"]=getTime()
+                                    data["deAuthTimeStart"]=dfd_getTime()
                                 end
-                                data["deAuthTimeStop"]=getTime()
+                                data["deAuthTimeStop"]=dfd_getTime()
 
                                 -- mark last packet as deauth
                                 data["last"]="DeAuth"
@@ -146,19 +146,19 @@ local function init_listener()
                                 -- if the last packet was data packet initialize deauth count with 1
                                 if(data["last"]=="Data")
                                     then
-                                    data["disAssocAvg"]=math.max(data["disAssocCount"]/div(data["disAssocTimeStop"],data["disAssocTimeStart"]))
+                                    data["disAssocAvg"]=math.max(data["disAssocCount"]/dfd_div(data["disAssocTimeStop"],data["disAssocTimeStart"]))
                                     data["disAssocTotal"]=data["disAssocTotal"]+data["disAssocCount"]
                                     data["disAssocCount"]=1
-                                    data["disAssocTimeStart"]=getTime()
+                                    data["disAssocTimeStart"]=dfd_getTime()
                                 else
 
                                     data["disAssocCount"]=data["disAssocCount"]+1
                                 end
                                 if(data["disAssocTimeStart"]==0)
                                     then
-                                    data["disAssocTimeStart"]=getTime()
+                                    data["disAssocTimeStart"]=dfd_getTime()
                                 end
-                                data["disAssocTimeStop"]=getTime()
+                                data["disAssocTimeStop"]=dfd_getTime()
                                 data["last"]="DeAuth"
                             end
                            container[sa..da]=data
@@ -171,7 +171,7 @@ local function init_listener()
                     container[sa..da]["last"]="Data"
           
                     -- check after how long the data packet was sent, if its less than the threshold then it is probably a deauth attack.
-                    if(getTime()-math.max(container[sa..da]["deAuthTimeStop"],container[sa..da]["disAssocTimeStop"]) < data_after_deauth_threshold)
+                    if(dfd_getTime()-math.max(container[sa..da]["deAuthTimeStop"],container[sa..da]["disAssocTimeStop"]) < data_after_deauth_threshold)
                         then
                         container[sa..da]["data"]=true
                     end
@@ -202,11 +202,11 @@ local function init_listener()
             local str="Deauth Count: "
                     ..tostring(v["deAuthTotal"]+v["deAuthCount"])
                     ..",Deauth per sec: "
-                    .. tostring(math.max(v["deAuthAvg"],(v["deAuthCount"]/div(v["deAuthTimeStop"],v["deAuthTimeStart"]))))
+                    .. tostring(math.max(v["deAuthAvg"],(v["deAuthCount"]/dfd_div(v["deAuthTimeStop"],v["deAuthTimeStart"]))))
                     ..",DisAssoc Count: "
                     ..tostring(v["disAssocTotal"]+v["disAssocCount"])
                     ..",DisAssoc per sec: "
-                    .. tostring(math.max(v["disAssocAvg"],(v["disAssocCount"]/div(v["disAssocTimeStop"],v["disAssocTimeStart"]))))
+                    .. tostring(math.max(v["disAssocAvg"],(v["disAssocCount"]/dfd_div(v["disAssocTimeStop"],v["disAssocTimeStart"]))))
                     ..",Data after Deauth/Disassoc: ".. tostring(v["data"])
 
             if(util.searchStr({str,v["source"],v["destination"]},stringToFind))
@@ -215,7 +215,7 @@ local function init_listener()
                     count=count+1
 
 
-                  local acf_settings={
+                  local dfd_acf_settings={
                   { 
                     ["value"]=count,           
                     ["length"]=10,  
@@ -247,7 +247,7 @@ local function init_listener()
                 }
                   win:append("|---------------------------------------------------------------------------------------------|\n")  
                   
-                  win:append(acf(acf_settings,"|"))  
+                  win:append(dfd_acf(dfd_acf_settings,"|"))  
                 end
           end
           win:append("|_____________________________________________________________________________________________|\n")     
@@ -255,18 +255,18 @@ local function init_listener()
         end 
 
 
-        function menu1()
+        function dfd_menu1()
             util.dialog_menu(deauth_disassoc_flooding,"Deauth Disassoc Flooding")
         end
 
-        register_menu("WiFi/Deauth Disassoc Flooding",menu1, MENU_TOOLS_UNSORTED)
+        register_menu("WiFi/Deauth Disassoc Flooding",dfd_menu1, MENU_TOOLS_UNSORTED)
 
 
   init_listener()
 
 end
 
-        function div(a,b)
+        function dfd_div(a,b)
             if(a==b)
                 then
                 return 1
@@ -275,26 +275,26 @@ end
             end
         end
 
-        function acf(settings,column_seperator)
+        function dfd_acf(settings,column_seperator)
           local final=""
-          while(isNext(settings))do
+          while(dfd_isNext(settings))do
               for k,v in ipairs(settings)do
                   if(v["next"]==false) then v["value"]="" else v["next"]=false end
-                  final=final..column_seperator..format_str(v)
+                  final=final..column_seperator..dfd_format_str(v)
                   if(k==#settings) then final=final..column_seperator.."\n" end
               end
            end
           return final
         end
 
-        function isNext(settings)
+        function dfd_isNext(settings)
           for k,v in ipairs(settings)do 
             if(v["next"]) then return true end
           end
           return false
         end
 
-        function format_str(global,substr)
+        function dfd_format_str(global,substr)
             local m=0
             local n=0
             local str=""
@@ -333,7 +333,7 @@ end
                 if(delimiter=="" or a==nil or a>len) then a=len else c=1 end
                 global["value"]=str:sub(a+c)
                 global["next"]=true
-                return format_str(global,str:sub(1,a-1))
+                return dfd_format_str(global,str:sub(1,a-1))
             end
             return s
         end

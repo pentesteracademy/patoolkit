@@ -56,17 +56,6 @@ do
   local beacons={}
   local beacons_store={}
 
-  -- Function to check whether entry exists in a table
-  function inTable(tbl, item)                             
-    for key, value in pairs(tbl) do 
-        --return if an item matches
-        if tonumber(tostring(value)) == item then return key end
-    end
-
-    -- return false if value doesn't exist in the table
-    return false
-  end
-
   function tap.reset()
     beacons={}
     beacons_store={}
@@ -150,7 +139,7 @@ do
           then  
 
             count=count+1
-            local acf_settings={
+            local bfd_acf_settings={
               { 
                 ["value"]=count,           
                 ["length"]=10,  
@@ -202,7 +191,7 @@ do
               }                             
             }
             win:append("|----------------------------------------------------------------------------------------------------------------------------|\n")        
-            win:append(acf(acf_settings,"|"))  
+            win:append(bfd_acf(bfd_acf_settings,"|"))  
           end
         end
       end
@@ -211,36 +200,36 @@ do
       end
 
  
- function menu1()
+ function bfd_menu1()
       util.dialog_menu(beacon_flood_detection,"Beacon Flood Detection")
  end
   -- Register the function to Tools menu
-  register_menu("WiFi/Beacon Flood Detection",menu1, MENU_TOOLS_UNSORTED)
+  register_menu("WiFi/Beacon Flood Detection",bfd_menu1, MENU_TOOLS_UNSORTED)
 end
 
 
 ------------------------------------- Function for string formatting START --------------------------------------------
 
-function acf(settings,column_seperator)
+function bfd_acf(settings,column_seperator)
   local final=""
-  while(isNext(settings))do
+  while(bfd_isNext(settings))do
       for k,v in ipairs(settings)do
           if(v["next"]==false) then v["value"]="" else v["next"]=false end
-          final=final..column_seperator..format_str(v)
+          final=final..column_seperator..bfd_format_str(v)
           if(k==#settings) then final=final..column_seperator.."\n" end
       end
    end
   return final
 end
 
-function isNext(settings)
+function bfd_isNext(settings)
   for k,v in ipairs(settings)do 
     if(v["next"]) then return true end
   end
   return false
 end
 
-function format_str(global,substr)
+function bfd_format_str(global,substr)
     local m=0
     local n=0
     local str=""
@@ -282,7 +271,7 @@ function format_str(global,substr)
         if( a==nil or a>len) then a=len else c=1 end
         global["value"]=str:sub(a+c)
         global["next"]=true
-        return format_str(global,str:sub(1,a-1))
+        return bfd_format_str(global,str:sub(1,a-1))
     end
     return s
 end

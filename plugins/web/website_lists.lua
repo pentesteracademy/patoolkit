@@ -29,7 +29,7 @@ do
   local ssl=Field.new("ssl.handshake.client_point")
   local time=Field.new("frame.time_relative")
 
-  function dns()
+  function wl_dns()
     if(dns_response()~=nil and tostring(dns_response())=='1' )
       then
       return true
@@ -38,7 +38,7 @@ do
     end
 
   end
-  function dns_type()
+  function wl_dns_type()
     if(dns_typ()~=nil and (tostring(dns_typ())=='1' or tostring(dns_typ())=='28') and (dns_ipv4()~=nil or dns_ipv6()~=nil))
       then
       return true
@@ -67,7 +67,7 @@ do
       
       -- Extracts ip from the listener.
 
-      if(dns~=nil and dns() and dns_type())
+      if(dns~=nil and wl_dns() and wl_dns_type())
         then
         local str=""
         if(dns_ipv4()~=nil)
@@ -180,23 +180,23 @@ do
           win:append("")
           local global={tostring(count),false}
           local global1={url,false}
-          win:append("|"..format_str(global[1],col_serial_len,global,"").."|"..format_str(global1[1],column_1_length,global1,",").."|"..format_str(tbl["ip"],column_2_length,global,",").."|"..format_str(tostring(tbl["packet_count"]),column_3_length,global," ").."|"..format_str(tostring(tbl["data_exchanged"]),column_4_length,global," ").."|"..format_str(tostring((tbl["packet_count"]/tbl["data_exchanged"])*100),column_5_length,global," ").."|"..format_str(tostring(tbl["time"]),column_6_length,global," ").."|\n")
+          win:append("|"..wl_format_str(global[1],col_serial_len,global,"").."|"..wl_format_str(global1[1],column_1_length,global1,",").."|"..wl_format_str(tbl["ip"],column_2_length,global,",").."|"..wl_format_str(tostring(tbl["packet_count"]),column_3_length,global," ").."|"..wl_format_str(tostring(tbl["data_exchanged"]),column_4_length,global," ").."|"..wl_format_str(tostring((tbl["packet_count"]/tbl["data_exchanged"])*100),column_5_length,global," ").."|"..wl_format_str(tostring(tbl["time"]),column_6_length,global," ").."|\n")
     
 
           while(global1[2]) do
-              win:append("|"..format_str("",col_serial_len,global," "))
+              win:append("|"..wl_format_str("",col_serial_len,global," "))
             if(global1[2])
               then
               global1[2]=false
-              win:append("|"..format_str(global1[1],column_1_length,global1," "))
+              win:append("|"..wl_format_str(global1[1],column_1_length,global1," "))
             else
-              win:append("|".. format_str("",column_1_length,global1," "))
+              win:append("|".. wl_format_str("",column_1_length,global1," "))
             end
-              win:append("|".. format_str("",column_2_length,global,","))
-              win:append("|".. format_str("",column_3_length,global,","))
-              win:append("|".. format_str("",column_4_length,global,","))
-              win:append("|".. format_str("",column_5_length,global,","))
-              win:append("|".. format_str("",column_6_length,global," ").."|\n")
+              win:append("|".. wl_format_str("",column_2_length,global,","))
+              win:append("|".. wl_format_str("",column_3_length,global,","))
+              win:append("|".. wl_format_str("",column_4_length,global,","))
+              win:append("|".. wl_format_str("",column_5_length,global,","))
+              win:append("|".. wl_format_str("",column_6_length,global," ").."|\n")
           end
         end
       end
@@ -222,23 +222,23 @@ do
 
   end
 
-  function menu1()
+  function wl_menu1()
       util.dialog_menu(dialog_menu1,"List of urls")
   end
-  function menu2()
+  function wl_menu2()
     util.dialog_menu(dialog_menu2,"List of urls")
 end
   
 
 
-  register_menu("Web/Websites visited over HTTP",menu1, MENU_TOOLS_UNSORTED)
-  register_menu("Web/Websites visited over HTTPS",menu2, MENU_TOOLS_UNSORTED)
+  register_menu("Web/Websites visited over HTTP",wl_menu1, MENU_TOOLS_UNSORTED)
+  register_menu("Web/Websites visited over HTTPS",wl_menu2, MENU_TOOLS_UNSORTED)
 
   init_listener()
 
 end
 
-function format_str(str,len,global, delimiter)
+function wl_format_str(str,len,global, delimiter)
     local s=str
     -- left space variable
     local m=0
@@ -283,7 +283,7 @@ function format_str(str,len,global, delimiter)
         global[2]=true
 
         -- returning the string with decreased length
-        return format_str(str:sub(0,a-1),len)
+        return wl_format_str(str:sub(0,a-1),len)
         
     end
     return s

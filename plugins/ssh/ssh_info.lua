@@ -88,12 +88,12 @@ local function init_listener()
 
                 local pair={}
                
-                pair["enc_server_client"]=split(tostring(enc_server_client()),",")
-                pair["enc_client_server"]=split(tostring(enc_client_server()),",")
-                pair["mac_server_client"]=split(tostring(mac_server_client()),",")
-                pair["mac_client_server"]=split(tostring(mac_client_server()),",")
-                pair["comp_server_client"]=split(tostring(comp_server_client()),",")
-                pair["comp_client_server"]=split(tostring(comp_client_server()),",")
+                pair["enc_server_client"]=ssh_split(tostring(enc_server_client()),",")
+                pair["enc_client_server"]=ssh_split(tostring(enc_client_server()),",")
+                pair["mac_server_client"]=ssh_split(tostring(mac_server_client()),",")
+                pair["mac_client_server"]=ssh_split(tostring(mac_client_server()),",")
+                pair["comp_server_client"]=ssh_split(tostring(comp_server_client()),",")
+                pair["comp_client_server"]=ssh_split(tostring(comp_client_server()),",")
 
                 sc[getSource()]=pair
                 if(sc[getDestination()]~=nil)
@@ -115,22 +115,22 @@ local function init_listener()
                     if(tostring(src_port())=="22")
                       then
                         type="server"
-                        enc_s_c=match(other["enc_server_client"],pair["enc_server_client"])
-                        enc_c_s=match(other["enc_client_server"],pair["enc_client_server"])
-                        mac_s_c=match(other["mac_server_client"],pair["mac_server_client"])
-                        mac_c_s=match(other["mac_client_server"],pair["mac_client_server"])
-                        comp_s_c=match(other["comp_server_client"],pair["comp_server_client"])
-                        comp_c_s=match(other["comp_client_server"],pair["comp_client_server"])
+                        enc_s_c=ssh_match(other["enc_server_client"],pair["enc_server_client"])
+                        enc_c_s=ssh_match(other["enc_client_server"],pair["enc_client_server"])
+                        mac_s_c=ssh_match(other["mac_server_client"],pair["mac_server_client"])
+                        mac_c_s=ssh_match(other["mac_client_server"],pair["mac_client_server"])
+                        comp_s_c=ssh_match(other["comp_server_client"],pair["comp_server_client"])
+                        comp_c_s=ssh_match(other["comp_client_server"],pair["comp_client_server"])
                     else
 
                         -- if the source is client, the current values are passed as first parameter.
                         type="client"
-                        enc_s_c=match(pair["enc_server_client"],other["enc_server_client"])
-                        enc_c_s=match(pair["enc_client_server"],other["enc_client_server"])
-                        mac_s_c=match(pair["mac_server_client"],other["mac_server_client"])
-                        mac_c_s=match(pair["mac_client_server"],other["mac_client_server"])
-                        comp_s_c=match(pair["comp_server_client"],other["comp_server_client"])
-                        comp_c_s=match(pair["comp_client_server"],other["comp_client_server"])
+                        enc_s_c=ssh_match(pair["enc_server_client"],other["enc_server_client"])
+                        enc_c_s=ssh_match(pair["enc_client_server"],other["enc_client_server"])
+                        mac_s_c=ssh_match(pair["mac_server_client"],other["mac_server_client"])
+                        mac_c_s=ssh_match(pair["mac_client_server"],other["mac_client_server"])
+                        comp_s_c=ssh_match(pair["comp_server_client"],other["comp_server_client"])
+                        comp_c_s=ssh_match(pair["comp_client_server"],other["comp_client_server"])
                     end
 
                     local current=container[getSource()]
@@ -184,7 +184,7 @@ end
                     count=count+1
 
 
-                  local acf_settings={
+                  local ssh_acf_settings={
                   { 
                     ["value"]=count,           
                     ["length"]=10,  
@@ -244,7 +244,7 @@ end
                 }
                   win:append("|----------------------------------------------------------------------------------------------------------------------------------|\n")  
                   
-                  win:append(acf(acf_settings,"|"))  
+                  win:append(ssh_acf(ssh_acf_settings,"|"))  
                 end
           end
           win:append("|__________________________________________________________________________________________________________________________________|\n")     
@@ -264,7 +264,7 @@ end
                     
                     count=count+1
 
-                    local acf_settings={
+                    local ssh_acf_settings={
                     { 
                       ["value"]=count,           
                       ["length"]=10,  
@@ -303,7 +303,7 @@ end
                   }
                     win:append("|-----------------------------------------------------------------------------------|\n")  
                     
-                    win:append(acf(acf_settings,"|"))  
+                    win:append(ssh_acf(ssh_acf_settings,"|"))  
                   end
             end
           end
@@ -311,22 +311,22 @@ end
 
         end 
 
-        function menu1()
+        function ssh_menu1()
             util.dialog_menu(get_ssh,"SSH Information")
         end
 
-        function menu2()
+        function ssh_menu2()
             util.dialog_menu(get_vuln,"Vulnerable SSH Versions")
         end
 
-        register_menu("SSH/SSH Information",menu1, MENU_TOOLS_UNSORTED)
-        register_menu("SSH/Vulnerable Version",menu2, MENU_TOOLS_UNSORTED)
+        register_menu("SSH/SSH Information",ssh_menu1, MENU_TOOLS_UNSORTED)
+        register_menu("SSH/Vulnerable Version",ssh_menu2, MENU_TOOLS_UNSORTED)
 
 
   init_listener()
 
 end
-        function split(inputstr, sep)
+        function ssh_split(inputstr, sep)
             if sep == nil then
                     sep = "%s"
             end
@@ -338,7 +338,7 @@ end
             return t
         end
 
-        function match(t1,t2)
+        function ssh_match(t1,t2)
           for k,v in pairs(t1)do
             for k2,v2 in pairs(t2)do
               if(v==v2)then
@@ -348,26 +348,26 @@ end
           end
         end
 
-        function acf(settings,column_seperator)
+        function ssh_acf(settings,column_seperator)
           local final=""
-          while(isNext(settings))do
+          while(ssh_isNext(settings))do
               for k,v in ipairs(settings)do
                   if(v["next"]==false) then v["value"]="" else v["next"]=false end
-                  final=final..column_seperator..format_str(v)
+                  final=final..column_seperator..ssh_format_str(v)
                   if(k==#settings) then final=final..column_seperator.."\n" end
               end
            end
           return final
         end
 
-        function isNext(settings)
+        function ssh_isNext(settings)
           for k,v in ipairs(settings)do 
             if(v["next"]) then return true end
           end
           return false
         end
 
-        function format_str(global,substr)
+        function ssh_format_str(global,substr)
             local m=0
             local n=0
             local str=""
@@ -406,7 +406,7 @@ end
                 if(delimiter=="" or a==nil or a>len) then a=len else c=1 end
                 global["value"]=str:sub(a+c)
                 global["next"]=true
-                return format_str(global,str:sub(1,a-1))
+                return ssh_format_str(global,str:sub(1,a-1))
             end
             return s
         end

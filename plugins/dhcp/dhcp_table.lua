@@ -46,7 +46,7 @@ local function dialog_menu1(win,stringToFind)
             then
               count=count+1
 			--Defining all the fields to be used in the table
-			local acf_settings={
+			local dhcp_acf_settings={
 			{ 
 				["value"]=serial,           
 				["length"]=column_serial_length,  
@@ -93,7 +93,7 @@ local function dialog_menu1(win,stringToFind)
 			
 			win:append("|------------------------------------------------------------------------------------------------------|\n")
 			
-			win:append(acf(acf_settings,"|"))
+			win:append(dhcp_acf(dhcp_acf_settings,"|"))
 			--end
 		end
 		end
@@ -138,7 +138,7 @@ local function dialog_menu2(win,stringToFind)
             then
               count=count+1
 			--Defining all the fields to be used in the table
-			local acf_settings={
+			local dhcp_acf_settings={
 			{ 
 				["value"]=serial,           
 				["length"]=column_serial_length,  
@@ -191,23 +191,23 @@ local function dialog_menu2(win,stringToFind)
 			
 			win:append("|-------------------------------------------------------------------------------------------------------------------|\n")
 			
-			win:append(acf(acf_settings,"|"))
+			win:append(dhcp_acf(dhcp_acf_settings,"|"))
 		end
 		end
 		win:append("|___________________________________________________________________________________________________________________|\n")
 end
 
-function menu1()
+function dhcp_menu1()
   util.dialog_menu(dialog_menu1,"DHCP Server Details")
  end
- function menu2()
+ function dhcp_menu2()
   util.dialog_menu(dialog_menu2,"DHCP Client Table")
  end
 
 function callback_client_table()
 	--GUI menu registration
-    register_menu("DHCP/DHCP Table",menu2, MENU_TOOLS_UNSORTED)
-	register_menu("DHCP/Server Info",menu1, MENU_TOOLS_UNSORTED)
+    register_menu("DHCP/DHCP Table",dhcp_menu2, MENU_TOOLS_UNSORTED)
+	register_menu("DHCP/Server Info",dhcp_menu1, MENU_TOOLS_UNSORTED)
 	
 	--Defining the listeners for ARP
 	local dhcp = Listener.new("frame","bootp");
@@ -305,26 +305,26 @@ callback_client_table()
 
 
 --Function declarations for displaying data in a column format
-function acf(settings,column_seperator)
+function dhcp_acf(settings,column_seperator)
   local final=""
-  while(isNext(settings))do
+  while(dhcp_isNext(settings))do
       for k,v in ipairs(settings)do
           if(v["next"]==false) then v["value"]="" else v["next"]=false end
-          final=final..column_seperator..format_str(v)
+          final=final..column_seperator..dhcp_format_str(v)
           if(k==#settings) then final=final..column_seperator.."\n" end
       end
    end
   return final
 end
 
-function isNext(settings)
+function dhcp_isNext(settings)
   for k,v in ipairs(settings)do 
     if(v["next"]) then return true end
   end
   return false
 end
 
-function format_str(global,substr)
+function dhcp_format_str(global,substr)
     local m=0
     local n=0
     local str=""
@@ -360,7 +360,7 @@ function format_str(global,substr)
         if(delimiter=="" or a==nil or a>len) then a=len else c=1 end
         global["value"]=str:sub(a+c)
         global["next"]=true
-        return format_str(global,str:sub(1,a-1))
+        return dhcp_format_str(global,str:sub(1,a-1))
     end
     return s
 end

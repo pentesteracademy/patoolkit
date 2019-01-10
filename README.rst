@@ -4,23 +4,7 @@
 PA Toolkit (Pentester Academy Wireshark Toolkit)
 #########################################################################
 
-PA Toolkit is a collection of traffic analysis plugins to extend the functionality of Wireshark from a micro-analysis tool and protocol dissector to the macro analyzer and threat hunter. PA Toolkit contains plugins (both dissectors and taps) covering various scenarios for multiple protocols, including:
-
-- WiFi (WiFi network summary, Detecting beacon, deauth floods etc.)
-- HTTP (Listing all visited websites, downloaded files)
-- HTTPS (Listing all websites opened on HTTPS)
-- ARP (MAC-IP table, Detect MAC spoofing and ARP poisoning)
-- DNS (Listing DNS servers used and DNS resolution, Detecting DNS Tunnels)
-
-The project is under active development and more plugins will be added in near future.
-
-This material was created while working on "Traffic Analysis: TSHARK Unleashed" course. Those interested can check the course here: https://www.pentesteracademy.com/course?id=42
-
-#############
-Terms of Use
-#############
-
-- This is licensed under GPL just as Wireshark.
+This branch is created for installing PA Toolkit in Wireshark Global plugins directory on Linux based operating systems.
 
 ############
 Installation
@@ -28,58 +12,40 @@ Installation
 
 Steps:
 
-1. Copy the "plugins" directory to Wireshark plugins directory. 
-2. Start wireshark. :) 
+1. Copy the folders present in "plugins" directory to Wireshark **Global plugins** directory.  
 
-One can get the location of wireshark plugins directory by checking `Help > About Wireshark > Folders`
+    One can get the location of wireshark plugins directory by checking *Help > About Wireshark > Folders*
 
-.. image:: https://user-images.githubusercontent.com/743886/43845711-72426d36-9ae1-11e8-9945-0bbe8e078e2a.png
+2. Set LUA_PATH Enviornment variable.
 
-Please opt for **Personal Plugins** directory instead of **Global Plugins** directory. Also, please don't paste the plugins directory in both directories otherwise you might see repeated entries for each plugin.
+    Add absolute path of "lib" folder present in wireshark global plugins directory to LUA_PATH variable. This can be done by one of the follwoing methods:
 
-**Special note for Macbook users:** Paste the plugins in **Personal Lua plugins** and not in **Personal Plugins**.
+    **Method 1 (Preferred)**
+    
+    Create a shell script file in "/etc/profile.d" directory with the following content:
+ 
+        export LUA_PATH="/usr/lib/x86_64-linux-gnu/wireshark/plugins/2.6/lib/?.lua"
 
-################
-Tool featured at
-################
+    *Note:* The filename should end with ".sh"
 
-- Blackhat Arsenal 2018 <https://www.blackhat.com/us-18/arsenal/schedule/index.html#pa-toolkit-wireshark-plugins-for-pentesters-12035>
-- DEF CON 26 Demolabs <https://defcon.org/html/defcon-26/dc-26-demolabs.html>
+    **Method 2:** 
 
-#######
-Author
-#######
+    Add LUA_PATH variable in "/etc/enviornment", append the following line in "/etc/enviornment" file.
 
-- Nishant Sharma, Technical Manager, Pentester Academy <nishant@binarysecuritysolutions.com>
-- Jeswin Mathai, Security Researcher, Pentester Academy <jeswin@binarysecuritysolutions.com> 
+        LUA_PATH="/usr/lib/x86_64-linux-gnu/wireshark/plugins/2.6/lib/?.lua"
 
-Under the guidance of Mr. Vivek Ramachandran, CEO, Pentester Academy
 
-##############
-Documentation
-##############
+    *Note:* Please remember to replace the Wireshark global plugin folder path used in the above methods with your own wireshark global plugins folder path.
 
-For more details refer to the "PA-Toolkit.pdf" PDF file. This file contains the slide deck used for presentations.
 
-############
-Screenshots
-############
+3. Start wireshark. :) 
 
-PA Toolkit after installation
 
-.. image:: https://user-images.githubusercontent.com/743886/44320933-e4772d80-a3f9-11e8-86c6-82b614221700.png
+#############
+Terms of Use
+#############
 
-List of websites visited over HTTP
-
-.. image:: https://user-images.githubusercontent.com/743886/44320940-e8a34b00-a3f9-11e8-98e9-ab003107d15c.png
-
-Search functionality
-
-.. image:: https://user-images.githubusercontent.com/743886/44320950-f48f0d00-a3f9-11e8-897a-d84d5e20e2e0.png
-
-Domain to IP mappings
-
-.. image:: https://user-images.githubusercontent.com/743886/44320953-f8bb2a80-a3f9-11e8-8530-70d36b0a1bff.png
+- This is licensed under GPL just as Wireshark.
 
 ########
 License
