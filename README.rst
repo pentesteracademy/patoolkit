@@ -39,6 +39,8 @@ Please opt for **Personal Plugins** directory instead of **Global Plugins** dire
 
 **Special note for Macbook users:** Paste the plugins in **Personal Lua plugins** and not in **Personal Plugins**.
 
+**Compatibility:** Current version is NOT compatible with Wireshark v2.9. Support request pending: https://github.com/pentesteracademy/patoolkit/issues/5
+
 ################
 Tool featured at
 ################
