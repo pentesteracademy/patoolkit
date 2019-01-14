@@ -18,13 +18,13 @@ Steps:
 
 2. Set LUA_PATH Enviornment variable.
 
-    Add absolute path of "lib" folder present in wireshark global plugins directory to LUA_PATH variable. This can be done by one of the follwoing methods:
+    Add absolute path of "lib" folder present in wireshark global plugins directory to LUA_PATH variable. This can be done by one of the following methods:
 
     **Method 1 (Preferred)**
     
     Create a shell script file in "/etc/profile.d" directory with the following content:
  
-        export LUA_PATH="/usr/lib/x86_64-linux-gnu/wireshark/plugins/2.6/lib/?.lua"
+        export LUA_PATH="$LUA_PATH;/usr/lib/x86_64-linux-gnu/wireshark/plugins/2.6/lib/?.lua"
 
     *Note:* The filename should end with ".sh"
 
