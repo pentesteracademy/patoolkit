@@ -30,12 +30,17 @@ Steps:
 
     **Method 2:** 
 
-    Add LUA_PATH variable in "/etc/enviornment", append the following line in "/etc/enviornment" file.
+    Add LUA_PATH variable in "/etc/enviornment". If LUA_PATH variable has not been defined in "/etc/enviornment" file, append the following line in "/etc/enviornment" file.
 
         LUA_PATH="/usr/lib/x86_64-linux-gnu/wireshark/plugins/2.6/lib/?.lua"
 
+    If LUA_PATH variable already exists, then append the path seperated by ";" to LUA_PATH variable. For e.g
 
-    *Note:* Please remember to replace the Wireshark global plugin folder path used in the above methods with your own wireshark global plugins folder path.
+       LUA_PATH="/?.lua;/usr/lib/x86_64-linux-gnu/wireshark/plugins/2.6/lib/?.lua"
+
+    where "/?.lua" is existing value of LUA_PATH variable.
+
+    *Note:* Please use Wireshark global plugin folder path of your machine instead of the path mentioned in the above methods.
 
 
 3. Start wireshark. :) 
