@@ -35,6 +35,14 @@ One can get the location of wireshark plugins directory by checking `Help > Abou
 
 .. image:: https://user-images.githubusercontent.com/743886/43845711-72426d36-9ae1-11e8-9945-0bbe8e078e2a.png
 
+Please opt for **Personal Plugins** directory and NOT the **Global Plugins** directory.
+
+If you prefer **Global Plugins** directory, then please use this branch: https://github.com/pentesteracademy/patoolkit/tree/global-plugins
+
+**Special note for Macbook users:** Paste the plugins in **Personal Lua plugins** and not in **Personal Plugins**.
+
+**Compatibility:** Current version is NOT compatible with Wireshark v2.9. Support request pending: https://github.com/pentesteracademy/patoolkit/issues/5
+
 ################
 Tool featured at
 ################
