@@ -56,11 +56,16 @@ do
   local beacons={}
   local beacons_store={}
 
+
+  local function getString(str)
+    if(str~=nil) then return tostring(str) else return "NA" end
+  end
+  
   -- Function to check whether entry exists in a table
   function inTable(tbl, item)                             
     for key, value in pairs(tbl) do 
         --return if an item matches
-        if tonumber(tostring(value)) == item then return key end
+        if tonumber(tostring(value or "0")) == item then return key end
     end
 
     -- return false if value doesn't exist in the table
@@ -77,20 +82,20 @@ do
  
 
     -- Variable to store SSID
-    local ssid=tostring(SSID())
+    local ssid=getString(SSID())
 
     -- Variable to store BSSID
-    local bssid=tostring(BSSID())
+    local bssid=getString(BSSID())
     local gc,pc,keyM,auth,wpa_st,frame_pr=security.getEncryption()
     local key=ssid.."-"..bssid
 
 
-    if(tostring(beacon())=="8")
+    if(getString(beacon())=="8")
       then
 
 
         -- Variable to store Channel
-        local channel=tostring(Channel())
+        local channel=getString(Channel())
         
         if(beacons[key]==nil)
           then

@@ -29,16 +29,30 @@ do
         local sc={}
         local container={}
 
+        local function getString(str)
+            if(str~=nil) then return tostring(str) else return "NA" end
+        end
+
         function getFrame()
             return tostring(frame_number())
         end
 
         function getSource()
-          return tostring(src() or ipv6src())..":"..tostring(src_port())
+          if (src_port() and (src() or ipv6src()))
+            then
+                return tostring(src() or ipv6src())..":"..tostring(src_port())
+          else
+                return "NA"
+          end
         end
 
         function getDestination()
-          return tostring(dst() or ipv6dst())..":".. tostring(dst_port())
+          if (dst_port() and (dst() or ipv6dst()))
+            then
+            return tostring(dst() or ipv6dst())..":".. tostring(dst_port())
+          else
+            return "NA"
+          end
         end
 
 local function init_listener()
@@ -58,17 +72,17 @@ local function init_listener()
 
     -- Called once each time the filter of the tap matches
     function tap.packet(pinfo, tvb)
-        if (container[getSource()]==nil and ssh_protocol()~=nil)
+        if (getSource() ~= "NA" and container[getSource()]==nil and ssh_protocol()~=nil)
           then
             local info={}
             -- get the protocol information
-            local protocol=tostring(ssh_protocol())
+            local protocol=getString(ssh_protocol())
             protocol=string.sub(protocol,5)
             -- split the field to get useragent, version and operating system
             -- the field is in format of "SSH-2.0-OpenSSH_7.7 Ubuntu"
             local pos=string.find(protocol,"-")
             if pos==nil then pos=string.len(protocol)+1 end
-            info["ip"]=tostring(src() or ipv6src())
+            info["ip"]=getString(src() or ipv6src())
             info["version"]=string.sub(protocol,1,pos-1)
             local last=string.find(protocol," ")
             if(last~=nil)
@@ -83,17 +97,17 @@ local function init_listener()
             container[getSource()]=info
 
         -- check key exchange init to get the algorithms for both server and clients
-        elseif(ssh_message_code() ~= nil and tostring(ssh_message_code()) == "20")
+        elseif(getString(ssh_message_code()) == "20")
           then
 
                 local pair={}
                
-                pair["enc_server_client"]=split(tostring(enc_server_client()),",")
-                pair["enc_client_server"]=split(tostring(enc_client_server()),",")
-                pair["mac_server_client"]=split(tostring(mac_server_client()),",")
-                pair["mac_client_server"]=split(tostring(mac_client_server()),",")
-                pair["comp_server_client"]=split(tostring(comp_server_client()),",")
-                pair["comp_client_server"]=split(tostring(comp_client_server()),",")
+                pair["enc_server_client"]=split(getString(enc_server_client()),",")
+                pair["enc_client_server"]=split(getString(enc_client_server()),",")
+                pair["mac_server_client"]=split(getString(mac_server_client()),",")
+                pair["mac_client_server"]=split(getString(mac_client_server()),",")
+                pair["comp_server_client"]=split(getString(comp_server_client()),",")
+                pair["comp_client_server"]=split(getString(comp_client_server()),",")
 
                 sc[getSource()]=pair
                 if(sc[getDestination()]~=nil)
@@ -112,7 +126,7 @@ local function init_listener()
                     -- the one that matches first from parameter one among values in parameter 2
                     -- pair holds the value from current packet, if the current packet is from server, the values will be passed as second 
                     -- parameters, first parameter will contain values of client
-                    if(tostring(src_port())=="22")
+                    if(getString(src_port())=="22")
                       then
                         type="server"
                         enc_s_c=match(other["enc_server_client"],pair["enc_server_client"])

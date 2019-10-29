@@ -23,11 +23,6 @@ local wlan_fixed_capabilites_privacy=Field.new("wlan.fixed.capabilities.privacy"
 local wps_wifi_protected_setup_state=Field.new("wps.wifi_protected_setup_state")
 
 
-
-function getNum(str)
-	return tonumber(getString(str()))
-end
-
 function getString(str)
 	if(str ~=nil and str()~=nil) then return tostring(str()) else return "NA" end 
 end

@@ -22,23 +22,19 @@ do
         local container={}
         local container_store={}
         
-        function getFrame()
-            return tostring(frame_number())
+        local function getString(str)
+            if(str~=nil) then return tostring(str) else return "NA" end
         end
-        function getType()
-            if(sub_type()~=nil)
-                then
-                return tostring(sub_type())
-            else
-                return false
-            end
+
+        function getFrame()
+            return getString(frame_number())
         end
 
         function getKey()
-            return tostring(key())
+            return getString(key())
         end
         function getReplay()
-            return tostring(replay())
+            return getString(replay())
         end
 
 
@@ -81,11 +77,11 @@ local function init_listener()
         -- with key as source and destination of station
         if(key_name=="second" or key_name=="fourth") 
         then 
-            da=tostring(wlan_sa())
-            sa=tostring(wlan_da())
+            da=getString(wlan_sa())
+            sa=getString(wlan_da())
         else
-            sa=tostring(wlan_sa())
-            da=tostring(wlan_da())
+            sa=getString(wlan_sa())
+            da=getString(wlan_da())
         end
         local data={}
 

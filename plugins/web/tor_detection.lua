@@ -11,7 +11,7 @@ do
 	local util=require('util')
 	local src = Field.new('ip.src')
 	local dst = Field.new('ip.dst')
-	local sni = Field.new('ssl.handshake.extensions_server_name')
+	local sni = Field.new('tls.handshake.extensions_server_name')
 	local cname = Field.new('x509sat.uTF8String')
 	local srcport = Field.new('tcp.srcport')
 	local dstport = Field.new('tcp.dstport')
@@ -19,9 +19,14 @@ do
 	local time=Field.new("frame.time_relative")
 	local output = {}
 	local store={}
+
+	local function getstring(str)
+		if(str()~=nil) then return tostring(str()) else return "NA" end
+	end
+	
 	local function init_listener()
 
-	local tap = Listener.new("frame", "(ssl or tcp) && ip")
+	local tap = Listener.new("frame", "(tls or tcp) && ip")
 
 	    -- Called at the end of live capture run
 	function tap.reset()
@@ -48,7 +53,7 @@ do
 		  -- local subtree = tree:add(protocol, 'Tor_detection')
 		   
 		   --Analyzing all TCP packets TO DO : filter out all non-interested fields
-		   if proto()~=nil and tostring(transport_proto.value)=="6" then
+		   if getString(transport_proto)=="6" then
 		   local flag=false
 		   local ip=""
 		   local url=""
@@ -56,36 +61,36 @@ do
 		   local data_exchanged=0
 		   local sname=""
 			--Seeing if the sport or dport is 9001
-			if tostring(sport.value) == "9001" then
+			if getString(sport) == "9001" then
 		
-				url=tostring(src_ip.value)
-				ip=tostring(dst_ip.value)
+				url=getString(src_ip)
+				ip=getString(dst_ip)
 				flag=true
-			elseif tostring(dport.value) == "9001" then
-				url=tostring(dst_ip.value)
-				ip=tostring(src_ip.value)
+			elseif getString(dport) == "9001" then
+				url=getString(dst_ip)
+				ip=getString(src_ip)
 				flag=true
 			
 			--Checking all the TLS packets(specifically the Client and Server hello)
-			elseif tostring(sport.value) == "443" or tostring(dport.value) == "443" then
+			elseif getString(sport) == "443" or getString(dport) == "443" then
 				--Checking and storing the server name in Client Hello
 				if c_name == nil and s_name ~= nil then
-					sname = tostring(s_name.value)
-				elseif s_name == nil and c_name ~= nil and store[tostring(src_ip.value)]~=nil then
-					if store[tostring(src_ip.value)]["server"] == tostring(dst_ip.value) and store[tostring(src_ip.value)]["sname"]~= tostring(c_name.value) then
-						url=tostring(src_ip.value)
-						ip=tostring(dst_ip.value)
+					sname = getString(s_name)
+				elseif s_name == nil and c_name ~= nil and store[getString(src_ip)]~=nil then
+					if store[getString(src_ip)]["server"] == getString(dst_ip) and store[getString(src_ip)]["sname"]~= getString(c_name) then
+						url=getString(src_ip)
+						ip=getString(dst_ip)
 						flag=true
 					end
 				end
 
 				if(sname~="")
 					then
-					if(store[tostring(dst_ip.value)]==nil) then
-						store[tostring(dst_ip.value)]={}
+					if(store[getString(dst_ip)]==nil) then
+						store[getString(dst_ip)]={}
 					end
-					store[tostring(dst_ip.value)]["server"]=tostring(src_ip.value)
-					store[tostring(dst_ip.value)]["server"]=sname
+					store[getString(dst_ip)]["server"]=getstring(src_ip)
+					store[getString(dst_ip)]["server"]=sname
 				end
 			end
 
@@ -99,7 +104,7 @@ do
 						output[ip][url]={
 						["data"]=tonumber(tvb:len()),
 						["packet"]=1,
-						["time"]=tonumber(tostring(time()))
+						["time"]=tonumber(tostring(time() or "0"))
 
 					}
 						
@@ -108,7 +113,7 @@ do
 
 					output[ip][url]["data"]=output[ip][url]["data"]+tonumber(tvb:len())
 					output[ip][url]["packet"]=output[ip][url]["packet"]+1
-					output[ip][url]["time"]=tonumber(tostring(time()))
+					output[ip][url]["time"]=tonumber(tostring(time() or "0"))
 				
 				end
 			end

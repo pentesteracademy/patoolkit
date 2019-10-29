@@ -19,16 +19,12 @@ do
         local form_key=Field.new("urlencoded-form.key")
         local form_value=Field.new("urlencoded-form.value")
 
-        function check2(str)
-        if str ~=nil 
-          then return tostring(str)
-        else
-          return ""
-        end
+        local function getString(str)
+          if(str~=nil) then return tostring(str) else return "NA" end
         end
 
         function post()
-                return tostring(request_method())=="POST"
+                return getString(request_method())=="POST"
         end
 
         local container={}
@@ -55,12 +51,12 @@ local function init_listener()
         -- check if the request is post 
         if post()
           then
-            local uri=check2(request_uri())
+            local uri=getString(request_uri())
             local req={}
 
             -- store the host, useragent and path
-            req["host"]=check2(host())
-            req["user_agent"]=check2(user_agent())
+            req["host"]=getString(host())
+            req["user_agent"]=getString(user_agent())
             req["path"]=uri
 
             local key={form_key()}
@@ -69,7 +65,7 @@ local function init_listener()
 
             -- iterate over the key value pairs and create a string mapping
             for k,v in ipairs(key)do
-              req["param"]=req["param"]..check2(v) .. ": " .. check2(value[k])..","
+              req["param"]=req["param"]..getString(v) .. ": " .. getString(value[k])..","
             end
             table.insert(container,req)
         end

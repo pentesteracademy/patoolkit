@@ -14,21 +14,18 @@ do
         local host=Field.new("http.host")
         local request_uri=Field.new("http.request.uri")
         local user_agent=Field.new("http.user_agent")
-
-        function get()
-                return tostring(request_method())=="GET"
-        end
-
+        
         local container={}
   
-  -- function to return empty string if the value returned by function is null
-  function check2(str)
-    if str ~=nil 
-      then return tostring(str)
-    else
-      return ""
-    end
-  end
+        -- function to return "NA" string if the value returned by function is null
+        local function getString(str)
+          if(str~=nil) then return tostring(str) else return "NA" end
+        end
+
+
+        function get()
+                return getString(request_method())=="GET"
+        end
 
 local function init_listener()
 
@@ -52,12 +49,12 @@ local function init_listener()
         -- check whether the request is get 
         if get()
           then
-            local uri=tostring(request_uri())
+            local uri=getString(request_uri())
             local req={}
 
             -- store the host and user_agent field
-            req["host"]=check2(host())
-            req["user_agent"]=check2(user_agent())
+            req["host"]=getString(host())
+            req["user_agent"]=getString(user_agent())
 
             -- look for ? to seperate uri and parameters and split the string accordingly
             local pos = string.find(uri,"?") or 0

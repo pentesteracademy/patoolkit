@@ -32,17 +32,12 @@ do
           if(resp_code()==nil) then return false else return true end
         end
 
-       function check2(str)
-
-          if str ~= nil
-            then return tostring(str)
-          else
-            return ""
-          end
+        local function getString(str)
+          if(str~=nil) then return tostring(str) else return "NA" end
         end
 
         function getFrame()
-            return tostring(frame_number())
+            return getString(frame_number())
         end
 
 local function init_listener()
@@ -61,24 +56,24 @@ local function init_listener()
         -- check if its a request, if it is store host, useragent and the path of the request
         if getRequest()
           then
-            local uri=check2(request_uri())
+            local uri=getString(request_uri())
             local file={}
-            file["host"]=check2(host())
-            file["user_agent"]=check2(user_agent())
+            file["host"]=getString(host())
+            file["user_agent"]=getString(user_agent())
             file["path"]=uri
             requests[getFrame()]=file
 
         -- check for response code 200 ok and whether the is a request in field inside the response, save the content
         -- length, content type of the file in the response, map it with the request to which it corresponds and store it in container table
-        elseif (getFile() and request_in() and check2(resp_code())=="200")
+        elseif (getFile() and request_in() and getString(resp_code())=="200")
           then
-            local req=requests[check2(request_in())]
+            local req=requests[getString(request_in())]
             local file={}
             file["host"]=req["host"]
             file["user_agent"]=req["user_agent"]
             file["path"]=req["path"]
-            file["content_type"]=check2(content_type())
-            file["content_length"]=check2(content_length())
+            file["content_type"]=getString(content_type())
+            file["content_length"]=getString(content_length())
             table.insert(container,file)
         end
     end

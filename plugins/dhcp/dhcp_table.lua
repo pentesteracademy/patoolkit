@@ -210,41 +210,41 @@ function callback_client_table()
 	register_menu("DHCP/Server Info",menu1, MENU_TOOLS_UNSORTED)
 	
 	--Defining the listeners for ARP
-	local dhcp = Listener.new("frame","bootp");
+	local dhcp = Listener.new("frame","dhcp");
 	
 	--Fields to look for useful information
-	local pkt_type = Field.new('bootp.option.dhcp')
-	local client_IP = Field.new('bootp.ip.your')	
-	local server_IP = Field.new('bootp.ip.server')	
-	local relay_IP = Field.new('bootp.ip.relay')	
-	local client_MAC = Field.new('bootp.hw.mac_addr')	
-	local gateway_IP =Field.new('bootp.option.router')	
-	local DNS_IP = Field.new('bootp.option.domain_name_server')	
-	local Server_ID = Field.new('bootp.option.dhcp_server_id')	
+	local pkt_type = Field.new('dhcp.option.dhcp')
+	local client_IP = Field.new('dhcp.ip.your')	
+	local server_IP = Field.new('dhcp.ip.server')	
+	local relay_IP = Field.new('dhcp.ip.relay')	
+	local client_MAC = Field.new('dhcp.hw.mac_addr')	
+	local gateway_IP =Field.new('dhcp.option.router')	
+	local DNS_IP = Field.new('dhcp.option.domain_name_server')	
+	local Server_ID = Field.new('dhcp.option.dhcp_server_id')	
 	local source_IP = Field.new('ip.src')	
 	local source_MAC = Field.new('eth.src')	
-	local name = Field.new('bootp.option.hostname')	
-	local subnet = Field.new('bootp.option.subnet_mask')
+	local name = Field.new('dhcp.option.hostname')	
+	local subnet = Field.new('dhcp.option.subnet_mask')
 	
-	local function getstring(str)
-		if(str()~=nil) then return tostring(str()) else return "Not Given" end
+	local function getString(str)
+		if(str~=nil) then return tostring(str) else return "NA" end
 	end
 	
 	--Function called for each DHCP packet
 	function dhcp.packet(pinfo)
 		
-		dhcp_type = getstring(pkt_type)
-		client = getstring(client_IP)
-		MAC = getstring(client_MAC)
-		server = getstring(server_IP)
-		relay = getstring(relay_IP)
-		gateway = getstring(gateway_IP)
-		DNS = getstring(DNS_IP)
-		SID = getstring(Server_ID)
-		src_IP = getstring(source_IP)
-		src_MAC = getstring(source_MAC)
-		local_name = getstring(name)
-		mask = getstring(subnet)
+		dhcp_type = getString(pkt_type())
+		client = getString(client_IP())
+		MAC = getString(client_MAC())
+		server = getString(server_IP())
+		relay = getString(relay_IP())
+		gateway = getString(gateway_IP())
+		DNS = getString(DNS_IP())
+		SID = getString(Server_ID())
+		src_IP = getString(source_IP())
+		src_MAC = getString(source_MAC())
+		local_name = getString(name())
+		mask = getString(subnet())
 		
 		--Adding a client table entry in the table if it is a DHCP ACK
 		if( dhcp_type == "5" ) then

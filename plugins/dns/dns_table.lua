@@ -18,6 +18,10 @@ do
         local container={}
         local container_store={}
 
+        local function getString(str)
+          if(str()~=nil) then return tostring(str()) else return "NA" end
+        end
+
 local function init_listener()
 
     local tap = Listener.new("frame", "dns.flags.response == 1")
@@ -33,6 +37,8 @@ local function init_listener()
 
     end
 
+
+
     -- Called once each time the filter of the tap matches
     function tap.packet(pinfo, tvb)
       local type={dns_resp_type()}
@@ -41,15 +47,15 @@ local function init_listener()
       local count=0
       for k,v in ipairs(type)
         do
-          if(tostring(v)=="1")
+          if(getString(v)=="1")
             then
                 count=count+1
                 local rec={}
 
                 if (name[k]~=nil and answer[count] ~=nil)
                 	then
-	                rec["domain"]=tostring(name[k])
-	                rec["ip"]=tostring(answer[count])
+	                rec["domain"]=getString(name[k])
+	                rec["ip"]=getString(answer[count])
 	                if container_store[rec["domain"].."-"..rec["ip"]] == nil
 	                	then
 	                	container_store[rec["domain"].."-"..rec["ip"]]=true

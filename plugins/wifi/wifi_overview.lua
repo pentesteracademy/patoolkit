@@ -25,7 +25,7 @@ do
     local ssids={}
     local ssids_store={}
     function getString(str)
-        if(str()~=nil) then return tostring(str()) else return "" end
+        if(str~=nil) then return tostring(str) else return "NA" end
     end
 
     local tap = Listener.new("frame", "wlan")
@@ -45,8 +45,8 @@ do
     -- Called once each time the filter of the tap matches
     function tap.packet(pinfo, tvb)
 
-        local bssid=getString(Bssid)
-        local type=getString(fc_type)
+        local bssid=getString(Bssid())
+        local type=getString(fc_type())
         
         -- check whether bssid exists and is not equal to brodcast
         if(bssid~="" and bssid~="ff:ff:ff:ff:ff:ff")
@@ -66,7 +66,7 @@ do
 
 
             -- for % packet, check
-            if(getString(wlan_addr)==bssid)
+            if(getString(wlan_addr())==bssid)
                 then
 
                 -- for % packets, when bssid==wlan.addr
@@ -79,7 +79,7 @@ do
                 ssids[bssid]["mgmtCount"]=ssids[bssid]["mgmtCount"]+1
 
                 -- if becaon frame is found update rest of the information
-                if(getString(sub_type)=="8")
+                if(getString(sub_type())=="8")
                     then
 
                     if(ssids[bssid]["ssid"]==nil)
@@ -87,8 +87,8 @@ do
 
                         -- get encryption, key mangment and wps state from here
                         local gc,pc,keyM,enc,wpa_st,frame_pr=security.getEncryption()
-                        ssids[bssid]["ssid"]=getString(Ssid)
-                        ssids[bssid]["channel"]=getString(Channel)
+                        ssids[bssid]["ssid"]=getString(Ssid())
+                        ssids[bssid]["channel"]=getString(Channel())
                         ssids[bssid]["enc"]=enc
                         ssids[bssid]["keyM"]=keyM
                         ssids[bssid]["wps"]=wpa_st

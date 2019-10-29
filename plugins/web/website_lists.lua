@@ -26,11 +26,15 @@ do
   local dns_ipv4 =Field.new("dns.a")
   local dns_ipv6 =Field.new("dns.aaaa")
   local http=Field.new("http.request")
-  local ssl=Field.new("ssl.handshake.client_point")
+  local tls=Field.new("tls.handshake.client_point")
   local time=Field.new("frame.time_relative")
 
+  local function getString(str)
+    if(str~=nil) then return tostring(str) else return "NA" end
+  end
+
   function dns()
-    if(dns_response()~=nil and tostring(dns_response())=='1' )
+    if(getString(dns_response())=='1' )
       then
       return true
     else
@@ -39,7 +43,7 @@ do
 
   end
   function dns_type()
-    if(dns_typ()~=nil and (tostring(dns_typ())=='1' or tostring(dns_typ())=='28') and (dns_ipv4()~=nil or dns_ipv6()~=nil))
+    if(dns_typ()~=nil and (getString(dns_typ())=='1' or getString(dns_typ())=='28') and (dns_ipv4()~=nil or dns_ipv6()~=nil))
       then
       return true
     else
@@ -49,7 +53,7 @@ do
   end
   local function init_listener()
 
-    local tap = Listener.new("frame", "(dns || ((ssl.handshake.client_point || http.request) && tcp)) && ip")
+    local tap = Listener.new("frame", "(dns || ((tls.handshake.client_point || http.request) && tcp)) && ip")
 
     -- Called at the end of live capture run
     function tap.reset()
@@ -72,26 +76,26 @@ do
         local str=""
         if(dns_ipv4()~=nil)
           then
-              str=tostring(dns_ipv4())
+              str=getString(dns_ipv4())
               if(store[str]==nil)
                 then
-                store[str]=tostring(dns_name())
+                store[str]=getString(dns_name())
               end
         end
 
         if(dns_ipv6()~=nil)
           then
-              str=tostring(dns_ipv6())
+              str=getString(dns_ipv6())
               if(store[str]==nil)
                 then
-                store[str]=tostring(dns_name())
+                store[str]=getString(dns_name())
               end
         end
-    elseif(http()~=nil or ssl()~=nil)
+    elseif(http()~=nil or tls()~=nil)
       then
-        local ip = tostring(src())
+        local ip = getString(src())
         local data_exchanged = tonumber(tvb:len())
-        local dest=tostring(dst())
+        local dest=getString(dst())
         if not output[ip] then
           output[ip] = {}
         end
@@ -100,8 +104,8 @@ do
         local url =""
         if(http()~=nil)
           then
-            url = tostring(hostname())
-            if tostring(method()) == "CONNECT" then
+            url = getString(hostname())
+            if getString(method()) == "CONNECT" then
                 ishttp = 1
                 isconnect=1
             end
@@ -125,12 +129,12 @@ do
                 ["packet_count"] = 1, -- Counts total packet exchange
                 ["https"] = ishttp, -- Initially non-HTTPS
                 ["connect"]=isconnect,
-                ["time"]=tonumber(tostring(time()))
+                ["time"]=tonumber(tostring(time() or "0"))
               }
             else
               output[ip][url]["packet_count"] = output[ip][url]["packet_count"] + 1
               output[ip][url]["data_exchanged"] = output[ip][url]["data_exchanged"] + data_exchanged
-             output[ip][url]["time"] =tonumber(tostring(time()))
+             output[ip][url]["time"] =tonumber(tostring(time() or "0"))
             end
         
 

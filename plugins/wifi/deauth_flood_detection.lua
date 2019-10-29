@@ -24,21 +24,20 @@ do
         local time=Field.new("frame.time_relative")
         local data=Field.new("data")
 
+        local function getString(str)
+            if(str~=nil) then return tostring(str) else return "NA" end
+        end
+
         local container_store={}
 
         local container={}
 
         function getType()
-            if(sub_type()~=nil)
-                then
-                return tostring(sub_type())
-            else
-                return false
-            end
+            return getString(sub_type())
         end
 
         function getTime()
-            return tonumber(tostring(time()))
+            return tonumber(tostring(time() or "0"))
         end
 
 
@@ -56,8 +55,8 @@ local function init_listener()
     function tap.packet(pinfo, tvb)
            if(wlan()~=nil and wlan_sa()~=nil and wlan_da()~=nil)
            then
-                local sa=tostring(wlan_sa())
-                local da=tostring(wlan_da())
+                local sa=getString(wlan_sa())
+                local da=getString(wlan_da())
 
                 -- check whether the packet is disassoc or deauth
                 if(getType()=='12' or getType()=='10')
@@ -66,8 +65,8 @@ local function init_listener()
                         -- if an entry already exists for the connection, swap addresses
                         if(container[da..sa]~=nil)
                             then
-                             da=tostring(wlan_sa())
-                             sa=tostring(wlan_da())
+                             da=getString(wlan_sa())
+                             sa=getString(wlan_da())
                         end
 
                         -- if this is the first time, initalize the array with source, destination and other values
@@ -200,14 +199,14 @@ local function init_listener()
 
               
             local str="Deauth Count: "
-                    ..tostring(v["deAuthTotal"]+v["deAuthCount"])
+                    ..getString(v["deAuthTotal"]+v["deAuthCount"])
                     ..",Deauth per sec: "
-                    .. tostring(math.max(v["deAuthAvg"],(v["deAuthCount"]/div(v["deAuthTimeStop"],v["deAuthTimeStart"]))))
+                    .. getString(math.max(v["deAuthAvg"],(v["deAuthCount"]/div(v["deAuthTimeStop"],v["deAuthTimeStart"]))))
                     ..",DisAssoc Count: "
-                    ..tostring(v["disAssocTotal"]+v["disAssocCount"])
+                    ..getString(v["disAssocTotal"]+v["disAssocCount"])
                     ..",DisAssoc per sec: "
-                    .. tostring(math.max(v["disAssocAvg"],(v["disAssocCount"]/div(v["disAssocTimeStop"],v["disAssocTimeStart"]))))
-                    ..",Data after Deauth/Disassoc: ".. tostring(v["data"])
+                    .. getString(math.max(v["disAssocAvg"],(v["disAssocCount"]/div(v["disAssocTimeStop"],v["disAssocTimeStart"]))))
+                    ..",Data after Deauth/Disassoc: ".. getString(v["data"])
 
             if(util.searchStr({str,v["source"],v["destination"]},stringToFind))
                 then
