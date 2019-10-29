@@ -41,7 +41,7 @@ If you prefer **Global Plugins** directory, then please use this branch: https:/
 
 **Special note for Macbook users:** Paste the plugins in **Personal Lua plugins** and not in **Personal Plugins**.
 
-**Compatibility:** Current version is NOT compatible with Wireshark v2.9. Support request pending: https://github.com/pentesteracademy/patoolkit/issues/5
+**Compatibility:** This version is compatible with all version of wireshark till version 2.8. For using patoolkit on later version of wireshark please check the master branch: https://github.com/pentesteracademy/patoolkit/tree/master 
 
 ################
 Tool featured at
